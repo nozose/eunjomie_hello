@@ -67,95 +67,93 @@ document.addEventListener("DOMContentLoaded", function() {
           "음메~ 꿈을 따라가!"
         ]
       };
-      
 
       let currentSentenceIndex = 0;
-    const sentenceContainer = document.getElementById("sentence-container");
-    const translationContainer = document.getElementById("translation-container");
-    const sentenceIndexSpan = document.getElementById("sentence-index");
-    const totalSentencesSpan = document.getElementById("total-sentences");
-    const resultMessage = document.getElementById("result-message");
-
-    totalSentencesSpan.textContent = sentences.english.length;
-
-    function loadSentence() {
-        sentenceContainer.innerHTML = "";
-        const englishSentence = sentences.english[currentSentenceIndex];
-        const inputs = englishSentence.split(" ").map(word => {
-            const input = document.createElement("input");
-            input.type = "text";
-            input.dataset.word = word.replace(/[.,'"]/g, "");  // Remove punctuation
-            return input;
-        });
-
-        inputs.forEach((input, index) => {
-            sentenceContainer.appendChild(input);
-            input.addEventListener("keydown", event => handleInputKeyDown(event, inputs, index));
-            if (index < inputs.length - 1) sentenceContainer.appendChild(document.createTextNode(" "));
-        });
-
-        const koreanTranslation = document.createElement("p");
-        koreanTranslation.textContent = sentences.korean[currentSentenceIndex];
-        translationContainer.innerHTML = ""; // Clear previous translation
-        translationContainer.appendChild(koreanTranslation);
-
-        // Focus on the first input field
-        inputs[0].focus();
-    }
-
-    function handleInputKeyDown(event, inputs, index) {
-        switch (event.key) {
-            case "ArrowLeft":
-                if (index > 0) {
-                    event.preventDefault();
-                    inputs[index - 1].focus();
-                }
-                break;
-            case "ArrowRight":
-                if (index < inputs.length - 1) {
-                    event.preventDefault();
-                    inputs[index + 1].focus();
-                }
-                break;
-            case " ":
-                event.preventDefault(); // Prevent adding a space in the input field
-                if (index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                }
-                break;
-            case "Enter":
-                event.preventDefault();
-                checkAnswers(inputs);
-                break;
-        }
-    }
-
-    function checkAnswers(inputs) {
-        const allCorrect = inputs.every(input => input.value.trim().toLowerCase() === input.dataset.word.toLowerCase());
-        if (allCorrect) {
-            resultMessage.textContent = "Correct!";
-            if (currentSentenceIndex < sentences.english.length - 1) {
-                nextSentence();
-            } else {
-                resultMessage.textContent = "You have completed all sentences.";
-                nextSentenceButton.disabled = true;
-            }
-        } else {
-            resultMessage.textContent = "Some answers are incorrect. Please try again.";
-            inputs.forEach(input => {
-                input.style.borderColor = input.value.trim().toLowerCase() === input.dataset.word.toLowerCase() ? "green" : "red";
-            });
-        }
-    }
-
-    function nextSentence() {
-        currentSentenceIndex++;
-        sentenceIndexSpan.textContent = currentSentenceIndex + 1;
-        loadSentence();
-    }
-
-    document.getElementById("check-answer").addEventListener("click", () => checkAnswers(Array.from(sentenceContainer.querySelectorAll("input"))));
-    document.getElementById("next-sentence").addEventListener("click", nextSentence);
-
-    loadSentence();
+      const sentenceContainer = document.getElementById("sentence-container");
+      const translationContainer = document.getElementById("translation-container");
+      const sentenceIndexSpan = document.getElementById("sentence-index");
+      const totalSentencesSpan = document.getElementById("total-sentences");
+      const resultMessage = document.getElementById("result-message");
+  
+      totalSentencesSpan.textContent = sentences.english.length;
+  
+      function loadSentence() {
+          sentenceContainer.innerHTML = "";
+          const englishSentence = sentences.english[currentSentenceIndex];
+          const inputs = englishSentence.split(" ").map(word => {
+              const input = document.createElement("input");
+              input.type = "text";
+              input.dataset.word = word.replace(/[.,'"]/g, "");  // Remove punctuation
+              return input;
+          });
+  
+          inputs.forEach((input, index) => {
+              sentenceContainer.appendChild(input);
+              input.addEventListener("keydown", event => handleInputKeyDown(event, inputs, index)); // Handle space and arrow keys
+              if (index < inputs.length - 1) sentenceContainer.appendChild(document.createTextNode(" "));
+          });
+  
+          const koreanTranslation = document.createElement("p");
+          koreanTranslation.textContent = sentences.korean[currentSentenceIndex];
+          translationContainer.innerHTML = ""; // Clear previous translation
+          translationContainer.appendChild(koreanTranslation);
+  
+          // Focus on the first input field
+          inputs[0].focus();
+      }
+  
+      function handleInputKeyDown(event, inputs, index) {
+          switch (event.key) {
+              case "ArrowLeft": // Move to the previous input
+                  if (index > 0) {
+                      event.preventDefault();
+                      inputs[index - 1].focus();
+                  }
+                  break;
+              case "ArrowRight": // Move to the next input
+                  if (index < inputs.length - 1) {
+                      event.preventDefault();
+                      inputs[index + 1].focus();
+                  }
+                  break;
+              case " ": // Handle space input
+                  event.preventDefault(); // Prevent the space from being entered
+                  if (index < inputs.length - 1) {
+                      inputs[index + 1].focus();
+                  }
+                  break;
+              case "Enter": // Check answers
+                  event.preventDefault();
+                  checkAnswers(inputs);
+                  break;
+          }
+      }
+  
+      function checkAnswers(inputs) {
+          const allCorrect = inputs.every(input => input.value.trim().toLowerCase() === input.dataset.word.toLowerCase());
+          if (allCorrect) {
+              resultMessage.textContent = "Correct!";
+              if (currentSentenceIndex < sentences.english.length - 1) {
+                  nextSentence();
+              } else {
+                  resultMessage.textContent = "You have completed all sentences.";
+              }
+          } else {
+              resultMessage.textContent = "Some answers are incorrect. Please try again.";
+              inputs.forEach(input => {
+                  input.style.borderColor = input.value.trim().toLowerCase() === input.dataset.word.toLowerCase() ? "green" : "red";
+              });
+          }
+      }
+  
+      function nextSentence() {
+          currentSentenceIndex++;
+          sentenceIndexSpan.textContent = currentSentenceIndex + 1;
+          loadSentence();
+      }
+  
+      document.getElementById("check-answer").addEventListener("click", () => checkAnswers(Array.from(sentenceContainer.querySelectorAll("input"))));
+      document.getElementById("next-sentence").addEventListener("click", nextSentence);
+  
+      loadSentence();
 });
