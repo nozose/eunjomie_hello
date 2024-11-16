@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영어 문장 외우기</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <h1>영어 문장 외우기</h1>
+    <div id="instructions">
+      <p>문장 번호: <span id="sentence-index">1</span>/<span id="total-sentences"></span></p>
+    </div>
+    <div id="sentence-container"></div>
+    <div id="translation-container"></div>
+    <button id="check-answer">답 확인</button>
+    <button id="next-sentence" style="display: none;">다음 문장</button>
+    <p id="result-message"></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
